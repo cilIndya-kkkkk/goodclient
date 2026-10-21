@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CN CLIENT · 指挥网络终端</title>
+<style>
+*{box-sizing:border-box;}
+:root{
+  --candy-cream:#fff8f0;--candy-cream-2:#fff0e6;
+  --candy-pink:#ffb3c6;--candy-pink-deep:#ff8fab;
+  --candy-mint:#a8e6cf;--candy-mint-deep:#7dd3c0;
+  --candy-yellow:#ffe066;--candy-yellow-deep:#ffd23f;
+  --candy-blue:#a0d8f1;--candy-lilac:#d5b8ff;
+  --candy-ink:#5a4a5e;--candy-ink-soft:#8a7a8e;
+  --candy-line:#5a4a5e;
+  --candy-radius:16px;--candy-radius-sm:10px;--candy-radius-lg:24px;
+  --candy-font:"Yuanti SC","YouYuan","M PLUS Rounded 1c","PingFang SC","Microsoft YaHei",sans-serif;
+  --candy-shadow:4px 4px 0 var(--candy-ink);
+  --candy-shadow-sm:3px 3px 0 var(--candy-ink);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--candy-cream);color:var(--candy-ink);}
+body{font-family:var(--candy-font);display:block;
+  background-image:
+    radial-gradient(circle at 15% 25%,rgba(255,179,198,.35) 0 60px,transparent 60px),
+    radial-gradient(circle at 85% 75%,rgba(168,230,207,.35) 0 70px,transparent 70px),
+    radial-gradient(circle at 70% 15%,rgba(255,224,102,.30) 0 45px,transparent 45px),
+    radial-gradient(circle at 25% 85%,rgba(160,216,241,.30) 0 50px,transparent 50px),
+    linear-gradient(rgba(90,74,94,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,74,94,.035) 1px,transparent 1px);
+  background-size:auto,auto,auto,auto,32px 32px,32px 32px;}
+
+.device{position:relative;width:min(400px,92vw);opacity:0;background:var(--candy-cream);
+  border:3px solid var(--candy-line);border-radius:var(--candy-radius-lg);
+  padding:26px 28px 18px;
+  box-shadow:8px 8px 0 var(--candy-pink),8px 8px 0 3px var(--candy-line);}
+.device.show{animation:candy-pop .45s cubic-bezier(.34,1.56,.64,1) forwards;}
+
+.head{display:flex;align-items:center;border-bottom:3px dashed var(--candy-pink);padding-bottom:12px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-dot{width:14px;height:14px;background:var(--candy-pink);border:2px solid var(--candy-line);border-radius:50%;position:relative;}
+.brand-dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--candy-yellow);}
+.brand h1{margin:0;font-size:20px;font-weight:900;letter-spacing:3px;color:var(--candy-ink);}
+.brand h1::after{content:" \273f";color:var(--candy-pink-deep);font-size:14px;}
+
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0 16px;}
+.tab{border:3px solid var(--candy-line);background:var(--candy-cream-2);color:var(--candy-ink-soft);
+  font-size:14px;font-weight:800;letter-spacing:2px;padding:10px 0;cursor:pointer;
+  font-family:var(--candy-font);border-radius:var(--candy-radius-sm);
+  box-shadow:var(--candy-shadow-sm);
+  transition:transform .08s,box-shadow .08s,background .15s;}
+.tab:hover{background:#fff;}
+.tab:active{transform:translate(3px,3px);box-shadow:none;}
+.tab.active{background:var(--candy-pink);color:var(--candy-ink);}
+
+.field{position:relative;margin-bottom:14px;}
+.field label{display:block;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--candy-ink);margin:0 0 6px;}
+.field input{width:100%;background:#fff;border:3px solid var(--candy-line);border-radius:var(--candy-radius-sm);
+  color:var(--candy-ink);font-size:14px;font-weight:600;padding:10px 12px;outline:none;
+  font-family:var(--candy-font);transition:border-color .15s,background .15s;}
+.field input:focus{border-color:var(--candy-pink-deep);background:#fffdf7;}
+.field input::placeholder{color:var(--candy-ink-soft);opacity:.6;}
+
+.row2{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:end;}
+.eye{height:46px;display:flex;align-items:center;justify-content:center;
+  border:3px solid var(--candy-line);border-radius:var(--candy-radius-sm);
+  background:var(--candy-mint);color:var(--candy-ink);cursor:pointer;
+  box-shadow:var(--candy-shadow-sm);transition:transform .08s,box-shadow .08s,background .15s;}
+.eye:hover{background:#bff0dd;}
+.eye:active{transform:translate(3px,3px);box-shadow:none;}
+.eye svg{width:20px;height:20px;}
+
+.btn{position:relative;width:100%;margin-top:18px;padding:14px;
+  border:3px solid var(--candy-line);border-radius:var(--candy-radius);
+  cursor:pointer;background:var(--candy-yellow);color:var(--candy-ink);
+  font-size:16px;font-weight:900;letter-spacing:6px;font-family:var(--candy-font);
+  box-shadow:var(--candy-shadow);transition:transform .08s,box-shadow .08s,background .15s;}
+.btn:hover{background:var(--candy-yellow-deep);}
+.btn:active{transform:translate(4px,4px);box-shadow:none;}
+.btn:disabled{opacity:.55;cursor:wait;}
+
+.err{color:var(--candy-pink-deep);font-size:13px;font-weight:800;min-height:18px;margin-top:12px;text-align:center;letter-spacing:1px;}
+.err.shake{animation:candy-shake .3s;}
+.consent{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:12px;font-weight:600;color:var(--candy-ink);line-height:1.6;cursor:pointer;}
+.consent input{flex:none;margin-top:2px;accent-color:var(--candy-pink-deep);transform:scale(1.2);}
+.consent a{color:var(--candy-pink-deep);text-decoration:underline;}
+.consent a:hover{color:var(--candy-lilac);}
+.foot{margin-top:16px;padding-top:10px;border-top:3px dashed var(--candy-mint);text-align:center;font-size:11px;font-weight:700;color:var(--candy-ink-soft);letter-spacing:1px;}
+.hide{display:none;}
+
+#cn-boot{position:fixed;inset:0;z-index:9999;background:var(--candy-cream);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--candy-ink);font-family:var(--candy-font);letter-spacing:1px;}
+#cn-boot-init{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;background:rgba(255,248,240,.93);z-index:2;}
+#cn-boot-init span{border:3px solid var(--candy-line);border-radius:var(--candy-radius);
+  padding:14px 28px;font-size:16px;font-weight:900;letter-spacing:3px;
+  background:var(--candy-pink);color:var(--candy-ink);box-shadow:var(--candy-shadow);}
+#cn-boot-log{width:min(640px,88vw);font-size:15px;line-height:1.9;font-weight:700;color:var(--candy-ink);}
+#cn-boot-cursor{display:inline-block;width:10px;height:16px;vertical-align:bottom;
+  background:var(--candy-pink-deep);border-radius:2px;animation:candy-blink .8s infinite;}
+
+@keyframes candy-blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+@keyframes candy-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+@keyframes candy-pop{0%{opacity:0;transform:scale(.85) translateY(10px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+
+@media(max-width:520px){
+  .device{padding:20px 16px 14px;}
+  .brand h1{font-size:16px;}
+  .btn{letter-spacing:3px;}
+}
+
+body{display:block;}
+#cn-login-screen{position:fixed;inset:0;z-index:99998;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:var(--candy-cream);
+  background-image:
+    radial-gradient(circle at 15% 25%,rgba(255,179,198,.40) 0 60px,transparent 60px),
+    radial-gradient(circle at 85% 75%,rgba(168,230,207,.40) 0 70px,transparent 70px),
+    radial-gradient(circle at 70% 15%,rgba(255,224,102,.35) 0 45px,transparent 45px),
+    radial-gradient(circle at 25% 85%,rgba(160,216,241,.35) 0 50px,transparent 50px),
+    linear-gradient(rgba(90,74,94,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,74,94,.035) 1px,transparent 1px);
+  background-size:auto,auto,auto,auto,32px 32px,32px 32px;}
+
+.cn-public-nav{position:fixed;bottom:18px;left:0;right:0;display:flex;justify-content:center;gap:12px;z-index:5;}
+.cn-public-nav a{color:var(--candy-ink);text-decoration:none;font-size:13px;font-weight:800;letter-spacing:2px;
+  border:3px solid var(--candy-line);border-radius:999px;background:var(--candy-mint);padding:8px 18px;
+  box-shadow:var(--candy-shadow-sm);transition:transform .08s,box-shadow .08s,background .15s;}
+.cn-public-nav a:hover{background:#bff0dd;}
+.cn-public-nav a:active{transform:translate(3px,3px);box-shadow:none;}
+
+html,body{overflow:hidden;padding:0;margin:0;background:#000;color:#fff;}
+
+</style>
+
+<link rel="icon" href="favicon.ico">
+<style id="candy-settings-fix">
+.window.settings,.window.flex-column.settings{background:#fff8f0!important;border:2px solid #5a4a5e!important;border-radius:18px!important;color:#5a4a5e!important;box-shadow:none!important;}
+.window.settings h1,.window.settings h2,.window.settings h3{color:#5a4a5e!important;font-weight:900!important;letter-spacing:2px!important;}
+.window.settings .scrollable{background:#fff0e6!important;border-radius:12px!important;}
+.window.settings button{background:#ffe066!important;color:#5a4a5e!important;border:2px solid #5a4a5e!important;border-radius:10px!important;font-weight:800!important;box-shadow:none!important;}
+.window.settings button:hover{background:#ffd23f!important;}
+.window.settings hr{border-color:#e8d5e0!important;}
+.window.settings input,.window.settings select,.window.settings textarea{background:#fff!important;color:#5a4a5e!important;border:2px solid #5a4a5e!important;border-radius:8px!important;}
+.window.settings footer{border-top:2px dashed #e8d5e0!important;}
+.window.settings label,.window.settings span,.window.settings div,.window.settings p{color:#5a4a5e!important;}
+.window.settings .cn-term-tool,.window.settings .cn-term-tool span{color:#5a4a5e!important;}
+</style>
+<script id="candy-settings-keeper">
+(function(){var el=document.getElementById("candy-settings-fix");if(!el)return;function keep(){var h=document.head;if(h.lastElementChild!==el)h.appendChild(el);}keep();new MutationObserver(keep).observe(document.head,{childList:true});setInterval(keep,1000);})();
+</script>
+</head>
+<body>
+<div id="cn-login-screen">
+<div id="cn-boot" style="display:none">
+  <div id="cn-boot-init"><span>[ 点击初始化系统 ]</span></div>
+  <div id="cn-boot-log"></div>
+</div>
+
+<div class="device" id="device">
+  <div class="head">
+    <div class="brand"><span class="brand-dot"></span><h1>CN CLIENT</h1></div>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-mode="login">登 录</button>
+    <button type="button" class="tab" data-mode="register">注 册</button>
+  </div>
+
+  <form id="f" autocomplete="on">
+    <div class="field"><label>账号</label><input id="username" placeholder="小写字母数字下划线，3-20 位" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required /></div>
+    <div class="row2">
+      <div class="field" style="margin:0"><label>密码</label><input id="password" type="password" placeholder="8 位以上，含字母和数字" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required /></div>
+      <button type="button" class="eye" id="eye" title="显示密码" aria-label="显示或隐藏密码">
+        <svg id="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="eye-off" class="hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+    <div id="reg-fields" class="hide">
+      <div class="field"><label>确认密码</label><input id="confirm" type="password" placeholder="再次输入密码" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" /></div>
+      <div class="field"><label>昵称</label><input id="nickname" placeholder="对外显示名称" autocomplete="nickname" /></div>
+      <div class="field"><label>邀请码</label><input id="invite" placeholder="XX-XXXXXX" autocomplete="off" /></div>
+    </div>
+    <label class="consent"><input type="checkbox" id="consent" /> 我已阅读并同意 <a href="privacy_policy" target="_blank">《隐私政策》</a></label>
+    <button type="submit" class="btn" id="btn">接 入</button>
+    <div class="err" id="err"></div>
+  </form>
+
+  <div class="foot">© 2026 CN CLIENT</div>
+</div>
+<nav class="cn-public-nav" aria-label="公开页">
+  <a href="replays.html">回放大厅</a>
+  <a href="r.html">回放详情</a>
+</nav>
+</div>
+<canvas id="canvasA" width="128" height="128"></canvas>
+    <span id="windowContainer">
+        <div class="window flex-column settings" style="display:none">
+            <h1>CN CLIENT SETTINGS</h1>
+            <div class="scrollable"></div>
+            <hr>
+            <footer>
+                <button onclick="__fx.settingsManager.resetAll()">重置设置</button>
+                <button onclick="__fx.settingsManager.save()">保存设置</button>
+                <button onclick="__fx.settingsManager.importFromFile()">导入</button>
+                <button onclick="__fx.settingsManager.exportToFile()">导出</button>
+            </footer>
+        </div>
+        <div class="window flex-column" id="customLobbyJoinMenu" style="display: none">
+            <input type="text" id="lobbyCode" placeholder="Enter lobby code">
+            or
+            <div>
+                <button id="createLobbyButton">Create new lobby</button>
+                <label for="region">in region:</label>
+                <select id="customLobbyRegion" name="region"
+                    title="Note: Region selection is a best effort, not a guarantee. The regions listed are only a subset of all the possible locations where a lobby can be created.">
+                    <option value="default" selected>Automatic (closest to you)</option>
+                    <option value="wnam">Western North America</option>
+                    <option value="enam">Eastern North America</option>
+                    <option value="weur">Western Europe</option>
+                    <option value="eeur">Eastern Europe</option>
+                    <option value="apac">Asia-Pacific</option>
+                    <option value="oc">Oceania</option>
+                </select>
+            </div>
+        </div>
+        <div class="window scrollable selectable" id="playerlist" style="display: none;">
+            <h1>Player List</h1>
+            <table>
+                <tbody id="playerlist_content"></tbody>
+            </table>
+        </div>
+        <div class="window scrollable selectable" id="donationhistory" style="display:none">
+            <h1>Donation history for </h1>
+            <p id="donationhistory_note">Note: donations from bots are not shown here</p>
+            <table>
+                <tbody id="donationhistory_content"></tbody>
+            </table>
+        </div>
+        <div class="window" style="display: none" id="updateNotification">
+            <h3>发现新版本，点击「更新」立即升级</h3>
+            <button id="swUpdateButton">更新</button>
+            <button onclick="document.getElementById('updateNotification').style.display = 'none'">忽略</button>
+        </div>
+    </span>
+<script>(function(){try{localStorage.removeItem("cn_api");}catch(e){console.warn('[CN gateway][WARN] 无法清除旧连接地址；仍只使用可信gateway。');}})();</script>
+果主题：游戏内覆盖层（内联，压过远程 shell.css） */
+.cn-term-panel{border:3px solid #5a4a5e!important;border-radius:20px!important;box-shadow:8px 8px 0 #ff8fab,8px 8px 0 3px #5a4a5e!important;overflow:hidden!important;}
+.cn-term-titlebar{height:38px!important;background:#ff8fab!important;border-bottom:3px solid #5a4a5e!important;border-radius:17px 17px 0 0!important;}
+.cn-term-dot{width:12px!important;height:12px!important;background:#fff8f0!important;border:2px solid #5a4a5e!important;border-radius:50%!important;}
+.cn-term-name{font-weight:900!important;color:#5a4a5e!important;}
+.cn-term-btn{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#fff8f0!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-btn:hover{background:#7dd3c0!important;}
+.cn-term-tab{font-weight:800!important;color:#8a7a8e!important;}
+.cn-term-tab.active{background:#ff8fab!important;color:#5a4a5e!important;}
+.cn-term-tools input,.cn-term-tools select{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#fff!important;font-weight:600!important;color:#5a4a5e!important;}
+.cn-term-tools button,.cn-term-mini{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#7dd3c0!important;font-weight:800!important;color:#5a4a5e!important;box-shadow:2px 2px 0 #5a4a5e!important;}
+.cn-term-open-team{border:3px solid #5a4a5e!important;border-radius:14px!important;background:#ffe066!important;font-weight:900!important;color:#5a4a5e!important;box-shadow:4px 4px 0 #5a4a5e!important;}
+.cn-term-open-team:hover{background:#ffd23f!important;}
+.cn-term-team{border-bottom:2px dashed #e8d5e0!important;padding:9px 10px!important;}
+.cn-term-team-count{border:2px solid #5a4a5e!important;border-radius:10px!important;background:#ff8fab!important;font-weight:900!important;color:#5a4a5e!important;}
+.cn-term-team-join,.cn-term-team-copy{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#7dd3c0!important;font-weight:800!important;color:#5a4a5e!important;box-shadow:2px 2px 0 #5a4a5e!important;}
+.cn-term-room{border-bottom:2px dashed #e8d5e0!important;padding:9px 10px!important;}
+.cn-term-room.active{background:#fff!important;box-shadow:inset 4px 0 0 #ff8fab!important;}
+.cn-term-room-av{border:2px solid #5a4a5e!important;border-radius:10px!important;background:#a0d8f1!important;font-weight:900!important;color:#5a4a5e!important;}
+.cn-term-bubble{border:2px solid #5a4a5e!important;border-radius:12px!important;background:#fff!important;color:#5a4a5e!important;}
+.cn-term-bubble.mine{background:#ff8fab!important;}
+.cn-term-inputrow input{border-top:2px solid #5a4a5e!important;font-weight:600!important;color:#5a4a5e!important;background:#fff!important;}
+.cn-term-inputrow button{border-left:2px solid #5a4a5e!important;background:#7dd3c0!important;font-weight:900!important;color:#5a4a5e!important;}
+.cn-term-toast{border:2px solid #5a4a5e!important;border-left:6px solid #7dd3c0!important;border-radius:10px!important;box-shadow:4px 4px 0 #5a4a5e!important;background:#fff8f0!important;}
+.cn-toast{border:2px solid #5a4a5e!important;border-radius:999px!important;background:#fff!important;box-shadow:4px 4px 0 #5a4a5e!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-replay-pub{border:3px solid #5a4a5e!important;border-radius:14px!important;background:#ffe066!important;font-weight:900!important;color:#5a4a5e!important;box-shadow:4px 4px 0 #5a4a5e!important;}
+.cn-term-replayform textarea,.cn-term-replayform input{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#fff!important;color:#5a4a5e!important;}
+.cn-term-replay-chip{border:2px solid #5a4a5e!important;border-radius:999px!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-replay-chip.on{background:#ff8fab!important;color:#5a4a5e!important;}
+.cn-term-profile-card{border:3px solid #5a4a5e!important;border-radius:18px!important;background:#fff8f0!important;box-shadow:6px 6px 0 #a0d8f1!important;}
+.cn-term-profile-avatar,.cn-term-ri-avatar{border:2px solid #5a4a5e!important;border-radius:12px!important;background:#ff8fab!important;font-weight:900!important;color:#5a4a5e!important;}
+.cn-term-section-head{border-bottom:2px dashed #e8d5e0!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-menu{border:2px solid #5a4a5e!important;border-radius:12px!important;box-shadow:4px 4px 0 #5a4a5e!important;background:#fff8f0!important;}
+.cn-term-menu-item{font-weight:700!important;color:#5a4a5e!important;}
+.cn-term-menu-item:hover{background:#ff8fab!important;}
+.cn-term-friend{border:2px solid #5a4a5e!important;border-radius:10px!important;background:#fff!important;}
+.cn-term-friend button{border:2px solid #5a4a5e!important;border-radius:6px!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-wbody{border:3px solid #5a4a5e!important;border-radius:16px 16px 12px 12px!important;background:#ffb3c6!important;}
+.cn-term-screen{border:2px solid #5a4a5e!important;border-radius:6px!important;background:#fff!important;font-weight:900!important;color:#5a4a5e!important;}
+.cn-term-grille{background:repeating-linear-gradient(#5a4a5e 0 2px,transparent 2px 6px)!important;border-radius:4px!important;}
+.cn-term-led.on{background:#7dd3c0!important;box-shadow:0 0 8px #7dd3c0!important;}
+.cn-term-roommeta{background:#fff0e6!important;border-bottom:2px dashed #e8d5e0!important;}
+.cn-term-cta{border-bottom:2px dashed #e8d5e0!important;}
+.cn-term-quickteam input{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#fff!important;color:#5a4a5e!important;}
+.cn-term-quickteam button{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#7dd3c0!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-searchrow input{border:2px solid #5a4a5e!important;border-radius:8px!important;background:#fff!important;color:#5a4a5e!important;}
+.cn-term-searchrow button{border:2px solid #5a4a5e!important;border-radius:8px!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-chatbar-back,.cn-term-chatbar-search{border:2px solid #5a4a5e!important;border-radius:8px!important;font-weight:800!important;color:#5a4a5e!important;}
+.cn-term-sec-h{background:#fff0e6!important;border-bottom:2px dashed #e8d5e0!important;color:#8a7a8e!important;}
+.cn-term-sec-add{border:2px solid #5a4a5e!important;border-radius:6px!important;}
+
+</style>
+<script>
+(function(){
+  var ls=document.getElementById("cn-login-screen");
+  if(ls){ls.style.display="none";}
+
+  window.__CN_TOKEN="local";
+  window.__CN_FEATURES = { CHAT: false, ANNOUNCEMENTS: true, AI_QA: false, ADMIN_PANEL: false };
+
+  // 1. 伪造 /online 接口的 runtime 数据，防止它刚加载时就拿空数据报错
+  (function(){
+    var _fetch=window.fetch;
+    window.fetch=function(input,init){
+      var url=typeof input==="string"?input:(input&&input.url||"");
+      if(url.indexOf("/api/")!==-1 || url.indexOf("trycloudflare.com/api")!==-1){
+        var runtimeObj = { status: "active", version: "1.0.0", ttlMs: 90000 };
+        var base = { ok:true, success:true, status:"ok" };
+        var res = Object.assign({}, base, {user:{id:"local", username:"local", role:"admin"}});
+        
+        if(url.includes("/online")) {
+            res = Object.assign({}, base, { online: 123, count: 123, users: [], runtime: runtimeObj });
+        }
+        else if(url.includes("/activity")) { res = Object.assign({}, base, { activities: [], items: [] }); }
+        else if(url.includes("/chat/messages")) { res = Object.assign({}, base, { messages: [] }); }
+        else if(url.includes("/announcements")) { res = Object.assign({}, base, { announcements: [], items: [] }); }
+        else if(url.includes("/friends")) { res = Object.assign({}, base, { friends: [], requests: [] }); }
+        else if(url.includes("/chat/rooms")) { res = Object.assign({}, base, { rooms: [{id:"main", name:"主频道", type:"channel"}] }); }
+        
+        return Promise.resolve(new Response(JSON.stringify(res),{status:200,headers:{"Content-Type":"application/json"}}));
+      }
+      return _fetch.apply(this,arguments);
+    };
+  })();
+
+  var CSS=["game/main.css","game/game-theme.css"];
+  CSS.forEach(function(h){
+    var l=document.createElement("link");l.rel="stylesheet";l.href=h;
+    document.head.appendChild(l);
+  });
+
+  var JS=["game/variables.js","game/fx.bundle.js","game/game.js","game/cn-platform-bundle.js"];
+  (function next(i){
+    if(i>=JS.length){return;}
+    var s=document.createElement("script");
+    s.src=JS[i];
+    s.onload=function(){
+        
+        // 2. 关键点：在 bundle 加载完的瞬间，直接覆写它的 CNApi！
+        if (JS[i].includes("cn-platform-bundle")) {
+            if (window.CNApi) {
+                window.CNApi.runtimeAllowed = function() { return true; };
+                window.CNApi.runtimeState = function() { return {allowed: true, error: '', remainingMs: 90000}; };
+            } else {
+            }
+        }
+        next(i+1);
+    };
+    s.onerror=function(){};
+    document.head.appendChild(s);
+  })(0);
+})();
+</script>
+</body>
+</html>

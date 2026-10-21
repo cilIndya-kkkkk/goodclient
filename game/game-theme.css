@@ -1,0 +1,103 @@
+/* ===== 糖果主题（替换 CN 暗色 game-theme.css）===== */
+:root{
+  --cn-green:#7dd3c0;--cn-accent:#ff8fab;--cn-accent-2:#a0d8f1;
+  --cn-bg:#fff8f0;--cn-panel:#fff8f0;--cn-panel-2:#fff0e6;
+  --cn-surface:#ffffff;--cn-border:#5a4a5e;--cn-border-soft:#e8d5e0;
+  --cn-text:#5a4a5e;--cn-text-dim:#6d5a72;--cn-muted:#8a7a8e;
+  --cn-faint:#b0a0b4;--cn-ok-fg:#5a4a5e;--cn-danger:#ff6b8a;
+  --cn-warn:#ffb347;--cn-blue:#a0d8f1;
+}
+html,body{font-family:"Yuanti SC","YouYuan","M PLUS Rounded 1c","PingFang SC","Microsoft YaHei",sans-serif !important;background:#fff8f0 !important;color:#5a4a5e !important;}
+button,input,select,textarea,::-webkit-file-upload-button{font-family:inherit !important;border-radius:12px !important;outline:none !important;}
+button{box-shadow:none !important;text-shadow:none !important;letter-spacing:1px;cursor:pointer;}
+button:disabled{opacity:.55 !important;cursor:default;}
+
+/* 默认按钮 */
+button:not([style*="background"]):not(#cn-term-panel button):not(#cn-term-walkie button):not(#cn-practice-widget button){
+  background-color:#ffe066 !important;color:#5a4a5e !important;border:2px solid #5a4a5e !important;border-radius:12px !important;font-weight:800 !important;
+}
+button:not([style*="background"]):not(#cn-term-panel button):not(#cn-term-walkie button):not(#cn-practice-widget button):hover:not(:disabled){
+  background-color:#ffd23f !important;color:#5a4a5e !important;
+}
+button[style*="background"]:hover:not(:disabled){filter:brightness(.94) !important;}
+
+/* 颜色家族（按 game 原始内联色） */
+button[style*="rgba(0, 0, 0"],button[style*="background-color: rgb(0, 0, 0)"]{background-color:#fff0e6 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(0, 60, 0"],button[style*="rgba(0, 70, 0"],button[style*="rgba(0, 100, 0"]{background-color:#a8e6cf !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(60, 0, 0"],button[style*="rgba(120, 0, 0"],button[style*="rgba(110, 50, 50"],button[style*="rgba(170, 50, 50"]{background-color:#ffb3c6 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(0, 60, 60"],button[style*="rgba(50, 110, 110"],button[style*="rgba(70, 130, 157"]{background-color:#a0d8f1 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(60, 0, 60"],button[style*="rgba(110, 50, 110"],button[style*="rgba(111, 86, 132"]{background-color:#d5b8ff !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(70, 40, 0"],button[style*="rgba(70, 50, 20"],button[style*="rgba(120, 90, 50"],button[style*="rgba(120, 100, 70"],button[style*="rgba(172, 122, 68"]{background-color:#ffd8a8 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(60, 60, 0"],button[style*="rgba(110, 110, 50"],button[style*="rgba(159, 154, 58"]{background-color:#ffe066 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(60, 60, 60"],button[style*="rgba(80, 60, 60"],button[style*="rgba(130, 110, 110"]{background-color:#e8d5e0 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgba(0, 60, 0, 0.8)"],button[style*="rgba(50, 110, 50"]{background-color:#a8e6cf !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+button[style*="rgb(50, 50, 50)"]{background-color:#fff0e6 !important;color:#5a4a5e !important;border-color:#5a4a5e !important;}
+
+/* 面板、边框 */
+div[style*="background-color: rgba(0, 0, 0, 0.85)"]{background-color:rgba(255,248,240,.98) !important;color:#5a4a5e !important;border:2px solid #5a4a5e !important;border-radius:18px !important;}
+div[style*="background-color: rgba(0, 0, 0, 0.6)"]{background-color:rgba(255,248,240,.96) !important;color:#5a4a5e !important;border:2px solid #5a4a5e !important;border-radius:16px !important;}
+[style*="solid rgb(255, 255, 255)"]{border-color:#5a4a5e !important;}
+[style*="currentcolor currentcolor currentcolor rgb(255, 255, 255)"]{border-color:#5a4a5e !important;}
+hr[style*="rgb(128, 128, 128)"]{border-color:#5a4a5e !important;}
+[style][style*="color: rgb(255, 255, 0)"]{color:#ff6b8a !important;text-shadow:none !important;}
+div[style*="background-color: rgba(230, 230, 160, 0.35)"]{background-color:rgba(255,179,198,.25) !important;}
+div[style*="rgba(70, 70, 0, 0.35)"]{background-color:rgba(168,230,207,.3) !important;}
+div[style*="rgba(0, 200, 0, 0.5)"]{background-color:rgba(125,211,192,.85) !important;}
+button[style*="rgba(0, 255, 0, 0.3)"]{background-color:rgba(255,179,198,.7) !important;color:#5a4a5e !important;}
+h1[style*="Arial Black"]{font-family:inherit !important;font-weight:900 !important;}
+
+/* 名人堂 */
+div[style*="width: 25%"][style*="border-right: 1.9px solid rgb(255, 255, 255)"]{display:none !important;}
+div[style*="width: 75%"][style*="right: 0px"][style*="overflow: auto hidden"]{width:100% !important;}
+
+/* 主菜单按钮 */
+button[style*="rgba(0, 70, 0, 0.85)"][style*="border: "],
+button[style*="rgba(0, 60, 60, 0.85)"][style*="border: "],
+button[style*="rgba(70, 50, 20, 0.85)"][style*="border: "],
+button[style*="rgba(80, 60, 60, 0.85)"][style*="border: "]{background-color:#ffe066 !important;border:2px solid #5a4a5e !important;color:#5a4a5e !important;}
+button[style*="rgba(0, 70, 0, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(50, 120, 50, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(0, 60, 60, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(50, 110, 110, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(70, 50, 20, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(120, 100, 70, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(80, 60, 60, 0.85)"][style*="border: "]:hover:not(:disabled),
+button[style*="rgba(130, 110, 110, 0.85)"][style*="border: "]:hover:not(:disabled){filter:none !important;background-color:#ffd23f !important;border-color:#5a4a5e !important;color:#5a4a5e !important;}
+
+button[style*="rgb(36, 137, 20)"][style*="border: "]{background-color:#7dd3c0 !important;border:2px solid #5a4a5e !important;}
+
+/* CN 设置按钮 */
+button[style*="rgba(8, 12, 10, 0.92)"][style*="solid rgb(255, 255, 255)"],
+button[style*="rgba(58, 62, 60, 0.92)"][style*="solid rgb(255, 255, 255)"]{background-color:#ffe066 !important;border:2px solid #5a4a5e !important;color:#5a4a5e !important;}
+button[style*="rgba(8, 12, 10, 0.92)"][style*="solid rgb(255, 255, 255)"]:hover:not(:disabled),
+button[style*="rgba(58, 62, 60, 0.92)"][style*="solid rgb(255, 255, 255)"]:hover:not(:disabled){filter:none !important;background-color:#ffd23f !important;border-color:#5a4a5e !important;}
+
+input,select,textarea{background-color:#ffffff !important;color:#5a4a5e !important;border:2px solid #5a4a5e !important;border-radius:12px !important;box-shadow:none !important;}
+input:focus,select:focus,textarea:focus{border-color:#ff6b8a !important;}
+::placeholder{color:#b0a0b4 !important;}
+
+.window,.menuBackground,.menu,.modal,.panel,.dialog,.popup{background-color:#fff8f0 !important;color:#5a4a5e !important;border:2px solid #5a4a5e !important;border-radius:18px !important;box-shadow:none !important;}
+
+h1,h2,h3,h4,h5,th,td,p,span,label,a,li,div{color:#5a4a5e !important;font-family:inherit !important;}
+h1,h2,h3,h4,h5{letter-spacing:2px !important;font-weight:800 !important;text-shadow:none !important;}
+a{color:#ff6b8a !important;}
+
+table{color:#5a4a5e !important;}
+td,th{border-color:#e8d5e0 !important;padding:4px 8px !important;}
+
+::-webkit-scrollbar{width:8px !important;height:8px !important;}
+::-webkit-scrollbar-thumb{background-color:rgba(255,179,198,.5) !important;border-radius:0 !important;}
+::-webkit-scrollbar-track{background-color:rgba(232,213,224,.3) !important;}
+
+.checkmark{background-color:#fff !important;border:2px solid #5a4a5e !important;border-radius:4px !important;}
+label.checkbox:hover .checkmark{background-color:#ffd23f !important;}
+label.checkbox input:checked ~ .checkmark{background-color:#7dd3c0 !important;}
+
+input[type="checkbox"],input[type="radio"]{appearance:none !important;-webkit-appearance:none !important;width:16px !important;height:16px !important;margin:2px 4px 2px 2px !important;background-color:#fff !important;border:2px solid #5a4a5e !important;border-radius:4px !important;cursor:pointer;vertical-align:middle;}
+input[type="checkbox"]:checked,input[type="radio"]:checked{background-color:#7dd3c0 !important;border-color:#5a4a5e !important;}
+input[type="radio"]{border-radius:50% !important;}
+.color-green{color:#7dd3c0 !important;}
+.color-red{color:#ff6b8a !important;}
+input[type="range"]{accent-color:#ff8fab;}
+
+::selection{background-color:#ffb3c6 !important;color:#5a4a5e !important;}
